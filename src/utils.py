@@ -1,5 +1,5 @@
 from langchain_core.messages import ToolMessage
-from langchain_core.runnables import RunnableLambda, RunnableWithFallbacks
+from langchain_core.runnables import RunnableLambda
 
 from langgraph.prebuilt import ToolNode
 
@@ -28,7 +28,7 @@ def _print_event(event: dict, _printed: set, max_length=1500):
     current_state = event.get("dialog_state")
     if current_state:
         print("Currently in: ", current_state[-1])
-    message = event.get("messages")
+    message = event.get("assistant", {}).get("messages") or event.get("tools", {}).get("messages")
     if message:
         if isinstance(message, list):
             message = message[-1]

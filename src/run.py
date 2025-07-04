@@ -2,8 +2,9 @@ import uuid
 
 from langchain_core.messages import HumanMessage
 
-from src.assistant import AssistantGraph
-from src.database import update_dates, local_file
+from assistant import AssistantGraph
+from database import update_dates, local_file
+from utils import _print_event
 
 db = update_dates(local_file)
 
@@ -23,10 +24,16 @@ if __name__ == "__main__":
 
     conversation_ongoing = True
     while conversation_ongoing:
+        _printed = set()
+
         user_input = input("\n👤 User:\n")
         messages = [HumanMessage(content=user_input)]
-        response = assistant.graph.invoke({"messages": messages}, config)
-        ai_message = response['messages'][-1]
+        events = assistant.graph.stream({"messages": messages}, config)
 
-        # Display output
-        print("\n🤖 Assistant:\n", ai_message)
+        for event in events:
+            _print_event(event, _printed)
+
+        # # Display output
+        # response = assistant.graph.invoke({"messages": messages}, config)
+        # ai_message = response['messages'][-1]
+        # print("\n🤖 Assistant:\n", ai_message)
