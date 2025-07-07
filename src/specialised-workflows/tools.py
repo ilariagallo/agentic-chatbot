@@ -6,7 +6,7 @@ import pytz
 from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import tool
 
-from src.database import local_file
+from database import local_file
 
 
 @tool
